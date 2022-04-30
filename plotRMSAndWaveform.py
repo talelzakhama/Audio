@@ -7,7 +7,8 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Plotting RMS and waveform of a .wav file")
 parser.add_argument('--path',type=str,metavar='',required=True,help='Path to .wav file')
-parser.add_argument('--yRange',required=False,help='Range of Magnitude (dB) to show in the y axis')
+parser.add_argument('-f','--frame',metavar='',required=False,help='Frame length, if not entered, default is 1024')
+parser.add_argument('-H','--hop',metavar='',required=False,help='Hope length, if not entered, default is 512')
 group = parser.add_mutually_exclusive_group()
 group.add_argument('-q','--quiet',action='store_true',help='print quiet')
 group.add_argument('-v','--verbose',action='store_true',help='print verbose')
@@ -26,10 +27,23 @@ def plotRMSAndWaveform(path,Frame_Length,Hop_Length):
 	plt.xlabel("Time (s)")
 	plt.ylabel("Magnitude (dB)")
 	plt.title("rms")
-	print ("Plot should now be open in a different window")
 	plt.show()
 
+if __name__ == '__main__':
 
-Frame_Length=1024
-Hop_Length=512
-plotRMSAndWaveform(args.path, Frame_Length, Hop_Length)
+	if args.frame:
+		Frame_Length=int (args.frame)
+	else:
+		Frame_Length=1024
+	if args.hop:
+		Hop_Length=int(args.hop)
+	else:
+		Hop_Length= 512
+	if args.quiet:
+		plotRMSAndWaveform(args.path, Frame_Length, Hop_Length)
+	elif args.verbose:
+		print (f"\nPlot of .wav file with frame length {Frame_Length} and hop length {Hop_Length} should now be open in a different window\n")
+		plotRMSAndWaveform(args.path, Frame_Length, Hop_Length)
+	else:
+		print ("\nYou should now see plot on a different window\n")
+		plotRMSAndWaveform(args.path, Frame_Length, Hop_Length)
